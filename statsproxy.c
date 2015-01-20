@@ -499,6 +499,24 @@ htmlPrintStats(char *uri, struct uri_entry *uri_entry, FILE *fp)
 {
     struct stats_entry *entry;
 
+    fprintf(fp, "{\n");
+    int cnt = 0;
+    TAILQ_FOREACH(entry, &uri_entry->stats, next) {
+        if (cnt > 0) {
+            fprintf(fp, ", ");
+        }
+        if (entry->type == ALPHA) {
+            fprintf(fp,
+                    "\"%s\" : %s", entry->name, entry->v.valueStr);
+        } else {
+            fprintf(fp,
+                    "\"%s\" : %lld", entry->name, entry->v.value);
+        }
+        cnt++;
+    }
+    fprintf(fp, "}\n");
+    return;
+
     TAILQ_FOREACH(entry, &uri_entry->stats, next) {
         if (entry->type == ALPHA) {
             fprintf(fp,
